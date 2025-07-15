@@ -1,0 +1,9 @@
+CREATE TABLE dinossauros(
+    id_dinossauro bigserial NOT NULL,
+    nome varchar(255) NOT NULL,
+    especie varchar(255) NOT NULL,
+    dieta varchar(255) NOT NULL,
+    idade_estimada_anos INT NOT NULL,
+    idade_do_dinossauro INT NOT NULL,
+    status_cercado varchar(255)
+)
