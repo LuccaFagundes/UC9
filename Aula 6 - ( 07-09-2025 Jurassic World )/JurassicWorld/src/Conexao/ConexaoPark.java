@@ -33,19 +33,4 @@ public class ConexaoPark {
         }
     }
 
-    public static void setDinossauro(String nome, String especie, String dieta, int idade_estimada_anos, int idade_do_dinossauro, String status_cercado) {
-        String sql = "INSERT INTO Dinossauros (nome,especie.dieta,idade_estimada_anos,idade_do_dinossauro,status_cercado) VALUES (?,?,?,?,?) ";
-        Connection conexao = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            conexao = ConexaoPark.conectar();
-            if (conexao != null){
-
-            }
-        } catch (SQLException e){
-            System.err.println("Erro ao conectar com o banco: " + e.getMessage());
-        }
-
-    }
 }
