@@ -87,6 +87,87 @@ public class dinoDAO {
         } return Dinossauros;
     }
 
+    public static List<Dino> getDieta(String dieta) {
+        String sql = "SELECT * FROM dinossauros WHERE dieta = ?";
+        Connection conexao = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Dino> Dinossauros = new ArrayList<>();
+
+        try {
+            conexao = conectar();
+            if (conexao != null) {
+                stmt = conexao.prepareStatement(sql);
+                stmt.setString(1, dieta);
+                rs = stmt.executeQuery();
+                System.out.println("\n--- Dinossauro(s) Cadastrados no BD ---");
+                boolean encontrouDinossauro = false;
+                while (rs.next()) {
+                    encontrouDinossauro = true;
+                    int id = rs.getInt("id_dinossauro");
+                    String nome = rs.getString("nome");
+                    String especie = rs.getString("especie");
+                    int idadeEstimada = rs.getInt("idade_estimada_anos");
+                    int idade = rs.getInt("idade_do_dinossauro");
+                    String status = rs.getString("status_cercado");
+                    System.out.println("\nID: " + id + "\n Nome: " + nome + "\n Especie: " + especie + "\n Dieta: " + dieta + "\n Idade Estimada: " + idadeEstimada + "M"+ "\n Idade Atual: " + idade + "\n Status: " + status);
+                    System.out.println("\n----------------------------------");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar dinossauros: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conexao != null) fecharConexao(conexao);
+            } catch (SQLException e) {
+                System.out.println("Erro ao fechar recursos após consulta: " + e.getMessage());
+            }
+        } return Dinossauros;
+    }
+
+    public static List<Dino> getStatus(String status) {
+        String sql = "SELECT * FROM dinossauros WHERE status_cercado = ? ORDER BY nome";
+        Connection conexao = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Dino> Dinossauros = new ArrayList<>();
+
+        try {
+            conexao = conectar();
+            if (conexao != null) {
+                stmt = conexao.prepareStatement(sql);
+                stmt.setString(1, status);
+                rs = stmt.executeQuery();
+                System.out.println("\n--- Dinossauro(s) Cadastrados no BD ---");
+                boolean encontrouDinossauro = false;
+                while (rs.next()) {
+                    encontrouDinossauro = true;
+                    int id = rs.getInt("id_dinossauro");
+                    String nome = rs.getString("nome");
+                    String especie = rs.getString("especie");
+                    int idadeEstimada = rs.getInt("idade_estimada_anos");
+                    int idade = rs.getInt("idade_do_dinossauro");
+                    String dieta = rs.getString("dieta");
+                    String statusBanco = rs.getString("status_cercado");
+                    System.out.println("\nID: " + id + "\n Nome: " + nome + "\n Especie: " + especie + "\n Dieta: " + dieta + "\n Idade Estimada: " + idadeEstimada + "M"+ "\n Idade Atual: " + idade + "\n Status: " + statusBanco);
+                    System.out.println("\n----------------------------------");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar dinossauros: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conexao != null) fecharConexao(conexao);
+            } catch (SQLException e) {
+                System.out.println("Erro ao fechar recursos após consulta: " + e.getMessage());
+            }
+        } return Dinossauros;
+    }
+
     public static void updateDinossauro(Dino dino) {
         String sql = "UPDATE dinossauros SET nome = ?, especie = ?, dieta = ?, idade_estimada_anos = ?, idade_do_dinossauro = ?, status_cercado = ? WHERE id_dinossauro = ?";
         Connection conexao = null;
@@ -124,21 +205,23 @@ public class dinoDAO {
         }
     }
 
-    public static void removerDinossauro(int idDinossauro){
+    public static void removerDinossauro(Dino dinossauro, int id){
         String sql = "DELETE FROM dinossauros WHERE id_dinossauro = ?";
         Connection conexao = null;
         PreparedStatement stmt = null;
-        System.out.println("--- Deletando Dinossauro Registrado ---");
+        System.out.println("--- Aniquilando Dinossauro(s) ---");
         try {
             conexao = conectar();
             if (conexao != null) {
                 stmt = conexao.prepareStatement(sql);
-                stmt.setInt(1, idDinossauro);
+                stmt.setInt(1, id);
                 int linhasAfetadas = stmt.executeUpdate();
                 if (linhasAfetadas > 0) {
-                    System.out.println("Dinossauro com ID "+ idDinossauro +" deletado com sucesso!");
+                    System.out.println("Dinossauro: ");
+                    System.out.println("\n Nome: " + dinossauro.getNome() + "\n Especie: " + dinossauro.getEspecie() + "\n Dieta: " + dinossauro.getDieta() + "\n Idade Estimada: " + dinossauro.getIdadeEstimada() + "M"+ "\n Idade Atual: " + dinossauro.getIdadeAtual() + "\n Status: " + dinossauro.getStatus());
+                    System.out.println("\nAniquilado com sucesso!");
                 } else {
-                    System.out.println("Nenhum Dinossauro encontrado com ID "+ idDinossauro);
+                    System.out.println("Nenhum Dinossauro encontrado com ID "+ dinossauro.getId());
                 }
             }
         } catch (SQLException e) {
