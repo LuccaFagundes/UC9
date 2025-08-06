@@ -71,8 +71,8 @@ public class EmprestimoController {
         return emprestimoDAO.getEmprestimoByID(id);
     }
 
-    public List<Emprestimo> getEmprestimosByAluno(int id) {
-        return emprestimoDAO.getEmprestimosByAluno(id);
+    public List<Emprestimo> getEmprestimosByAluno(String nome) {
+        return emprestimoDAO.getEmprestimosByAluno(nome);
     }
 
     public List<Emprestimo> getEmprestimosByLivro(int id) {

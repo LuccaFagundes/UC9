@@ -13,15 +13,15 @@ import java.util.List;
 import static Conexao.ConexaoBiblioteca.fecharConexao;
 
 public class EmprestimoDAO {
-    public void setEmprestimo (Emprestimo emprestimo){
+    public void setEmprestimo(Emprestimo emprestimo) {
         String sql = "INSERT INTO emprestimo(\n" +
                 "\tfk_id_livro, fk_id_aluno, data_emprestimo, data_devolucao)\n" +
                 "\tVALUES (?, ?, ?, ?);";
         Connection conexao = null;
         PreparedStatement stmt = null;
-        try{
+        try {
             conexao = ConexaoBiblioteca.conectar();
-            if(conexao != null){
+            if (conexao != null) {
                 stmt = conexao.prepareStatement(sql);
 
                 stmt.setInt(1, emprestimo.getFk_livro());
@@ -34,18 +34,18 @@ public class EmprestimoDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Falha ao cadastrar o Empréstimo: "+e.getMessage());
-        }  finally {
-            try{
+            System.err.println("Falha ao cadastrar o Empréstimo: " + e.getMessage());
+        } finally {
+            try {
                 if (stmt != null) stmt.close();
-                if(conexao != null) fecharConexao(conexao);
+                if (conexao != null) fecharConexao(conexao);
             } catch (SQLException error) {
                 System.err.println("Erro ao fechar conexao: " + error.getMessage());
             }
         }
     }
 
-    public int getIdAluno(String nome, String contato){
+    public int getIdAluno(String nome, String contato) {
         String sql = "SELECT * FROM aluno WHERE nome = ? AND contato = ?";
         Connection conexao = null;
         PreparedStatement stmt = null;
@@ -55,8 +55,8 @@ public class EmprestimoDAO {
             conexao = ConexaoBiblioteca.conectar();
             if (conexao != null) {
                 stmt = conexao.prepareStatement(sql);
-                stmt.setString(1,nome);
-                stmt.setString(2,contato);
+                stmt.setString(1, nome);
+                stmt.setString(2, contato);
                 rs = stmt.executeQuery();
                 System.out.println("\n--- Empréstimos cadastrados no BD ---");
                 while (rs.next()) {
@@ -64,14 +64,14 @@ public class EmprestimoDAO {
                     System.out.println(id_aluno.getFirst());
                 }
             }
-        } catch(SQLException error){
+        } catch (SQLException error) {
             System.out.println("Erro ao conectar com o banco de dados: " + error.getMessage());
         } finally {
-            try{
+            try {
                 if (rs != null) rs.close();
-                if(stmt != null) stmt.close();
-                if(conexao != null) fecharConexao(conexao);
-            } catch(SQLException error){
+                if (stmt != null) stmt.close();
+                if (conexao != null) fecharConexao(conexao);
+            } catch (SQLException error) {
                 System.err.println("Erro ao fechar recursos após pesquisa: " + error.getMessage());
             }
         }
@@ -79,7 +79,7 @@ public class EmprestimoDAO {
         return id_aluno.getFirst();
     }
 
-    public int getIdLivro(String isbn){
+    public int getIdLivro(String isbn) {
         String sql = "SELECT * FROM livro WHERE isbn = ?";
         Connection conexao = null;
         PreparedStatement stmt = null;
@@ -96,14 +96,14 @@ public class EmprestimoDAO {
                     id_livro.add(rs.getInt("id_livro"));
                 }
             }
-        } catch(SQLException error){
+        } catch (SQLException error) {
             System.out.println("Erro ao conectar com o banco de dados: " + error.getMessage());
         } finally {
-            try{
+            try {
                 if (rs != null) rs.close();
-                if(stmt != null) stmt.close();
-                if(conexao != null) fecharConexao(conexao);
-            } catch(SQLException error){
+                if (stmt != null) stmt.close();
+                if (conexao != null) fecharConexao(conexao);
+            } catch (SQLException error) {
                 System.err.println("Erro ao fechar recursos após pesquisa: " + error.getMessage());
             }
         }
@@ -111,7 +111,7 @@ public class EmprestimoDAO {
         return id_livro.getFirst();
     }
 
-    public List<Emprestimo> getEmprestimos(){
+    public List<Emprestimo> getEmprestimos() {
         String sql = "SELECT * FROM emprestimo";
         Connection conexao = null;
         PreparedStatement stmt = null;
@@ -134,14 +134,14 @@ public class EmprestimoDAO {
                     listaEmprestimos.add(new Emprestimo(id, id_livro, id_aluno, data_emprestimo, devolucao));
                 }
             }
-        } catch(SQLException error){
+        } catch (SQLException error) {
             System.out.println("Erro ao conectar com o banco de dados: " + error.getMessage());
         } finally {
-            try{
+            try {
                 if (rs != null) rs.close();
-                if(stmt != null) stmt.close();
-                if(conexao != null) fecharConexao(conexao);
-            } catch(SQLException error){
+                if (stmt != null) stmt.close();
+                if (conexao != null) fecharConexao(conexao);
+            } catch (SQLException error) {
                 System.err.println("Erro ao fechar recursos após pesquisa: " + error.getMessage());
             }
         }
@@ -150,8 +150,11 @@ public class EmprestimoDAO {
     }
 
 
-    public List<Emprestimo> getEmprestimosByAluno(int fkAluno){
-        String sql = "SELECT * FROM emprestimo WHERE fk_id_aluno = ?";
+    public List<Emprestimo> getEmprestimosByAluno(String nomeAluno) {
+        String sql = "SELECT * FROM emprestimo,aluno " +
+                "WHERE emprestimo.fk_id_aluno = aluno.id_aluno " +
+                "AND aluno.nome = ?";
+
         Connection conexao = null;
         PreparedStatement stmt = null;
         List<Emprestimo> listaEmprestimos = new ArrayList<>();
@@ -160,25 +163,27 @@ public class EmprestimoDAO {
             conexao = ConexaoBiblioteca.conectar();
             if (conexao != null) {
                 stmt = conexao.prepareStatement(sql);
+                stmt.setString(1, nomeAluno);
                 rs = stmt.executeQuery();
                 System.out.println("\n--- Empréstimos cadastrados no BD ---");
                 while (rs.next()) {
                     int id_livro = rs.getInt("fk_id_livro");
+                    int id_aluno = rs.getInt("fk_id_aluno");
                     int id = rs.getInt("id_emprestimo");
                     String data_emprestimo = rs.getString("data_emprestimo");
                     String devolucao = rs.getString("data_devolucao");
 
-                    listaEmprestimos.add(new Emprestimo(id, id_livro, fkAluno, data_emprestimo, devolucao));
+                    listaEmprestimos.add(new Emprestimo(id, id_livro, id_aluno, data_emprestimo, devolucao));
                 }
             }
-        } catch(SQLException error){
+        } catch (SQLException error) {
             System.out.println("Erro ao conectar com o banco de dados: " + error.getMessage());
         } finally {
-            try{
+            try {
                 if (rs != null) rs.close();
-                if(stmt != null) stmt.close();
-                if(conexao != null) fecharConexao(conexao);
-            } catch(SQLException error){
+                if (stmt != null) stmt.close();
+                if (conexao != null) fecharConexao(conexao);
+            } catch (SQLException error) {
                 System.err.println("Erro ao fechar recursos após pesquisa: " + error.getMessage());
             }
         }
@@ -187,7 +192,7 @@ public class EmprestimoDAO {
     }
 
 
-    public List<Emprestimo> getEmprestimosByLivro(int fkLivro){
+    public List<Emprestimo> getEmprestimosByLivro(int fkLivro) {
         String sql = "SELECT * FROM emprestimo WHERE fk_id_livro = ?";
         Connection conexao = null;
         PreparedStatement stmt = null;
@@ -209,14 +214,14 @@ public class EmprestimoDAO {
                     listaEmprestimos.add(new Emprestimo(id, fkLivro, id_aluno, data_emprestimo, devolucao));
                 }
             }
-        } catch(SQLException error){
+        } catch (SQLException error) {
             System.out.println("Erro ao conectar com o banco de dados: " + error.getMessage());
         } finally {
-            try{
+            try {
                 if (rs != null) rs.close();
-                if(stmt != null) stmt.close();
-                if(conexao != null) fecharConexao(conexao);
-            } catch(SQLException error){
+                if (stmt != null) stmt.close();
+                if (conexao != null) fecharConexao(conexao);
+            } catch (SQLException error) {
                 System.err.println("Erro ao fechar recursos após pesquisa: " + error.getMessage());
             }
         }
@@ -224,7 +229,7 @@ public class EmprestimoDAO {
         return listaEmprestimos;
     }
 
-    public Emprestimo getEmprestimoByID(int id){
+    public Emprestimo getEmprestimoByID(int id) {
         String sql = "SELECT * FROM emprestimo WHERE id_emprestimo = ?";
         Connection conexao = null;
         PreparedStatement stmt = null;
@@ -244,21 +249,21 @@ public class EmprestimoDAO {
                     return new Emprestimo(id, id_livro, id_aluno, data_emprestimo, devolucao);
                 }
             }
-        } catch(SQLException error){
+        } catch (SQLException error) {
             System.out.println("Erro ao conectar com o banco de dados: " + error.getMessage());
         } finally {
-            try{
+            try {
                 if (rs != null) rs.close();
-                if(stmt != null) stmt.close();
-                if(conexao != null) fecharConexao(conexao);
-            } catch(SQLException error){
+                if (stmt != null) stmt.close();
+                if (conexao != null) fecharConexao(conexao);
+            } catch (SQLException error) {
                 System.err.println("Erro ao fechar recursos após pesquisa: " + error.getMessage());
             }
         }
         return null;
     }
 
-    public void updateEmprestimo(Emprestimo emprestimo, int id){
+    public void updateEmprestimo(Emprestimo emprestimo, int id) {
         String sql = "UPDATE emprestimo SET data_emprestimo = ?, data_devolucao = ?, fk_id_livro = ?, fk_id_aluno = ? WHERE id_emprestimo = ?";
         Connection conexao = null;
         PreparedStatement stmt = null;
@@ -281,16 +286,16 @@ public class EmprestimoDAO {
         } catch (SQLException error) {
             System.err.println("Erro ao inserir o empréstimo: " + error.getMessage());
         } finally {
-            try{
-                if(stmt != null) stmt.close();
-                if(conexao != null) fecharConexao(conexao);
+            try {
+                if (stmt != null) stmt.close();
+                if (conexao != null) fecharConexao(conexao);
+            } catch (SQLException error) {
+                System.err.println("Erro ao fechar conexao: " + error.getMessage());
             }
-            catch(SQLException error){
-                System.err.println("Erro ao fechar conexao: " + error.getMessage());}
         }
     }
 
-    public void deletarEmprestimo(int id){
+    public void deletarEmprestimo(int id) {
         String sql = "DELETE FROM emprestimo WHERE id_emprestimo = ?";
         Connection conexao = null;
         PreparedStatement stmt = null;
@@ -309,10 +314,10 @@ public class EmprestimoDAO {
         } catch (SQLException error) {
             System.err.println("Erro ao inserir o emprestimo: " + error.getMessage());
         } finally {
-            try{
-                if(stmt != null) stmt.close();
-                if(conexao != null) fecharConexao(conexao);
-            } catch(SQLException error){
+            try {
+                if (stmt != null) stmt.close();
+                if (conexao != null) fecharConexao(conexao);
+            } catch (SQLException error) {
                 System.out.println("Erro ao fechar conexao: " + error.getMessage());
             }
         }

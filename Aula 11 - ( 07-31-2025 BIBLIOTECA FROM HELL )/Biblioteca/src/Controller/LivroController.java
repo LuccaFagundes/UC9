@@ -3,7 +3,6 @@ package Controller;
 import Model.DAO.LivroDAO;
 import Model.Livro;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class LivroController {
@@ -14,18 +13,11 @@ public class LivroController {
     }
 
     public void cadastrarLivro(String titulo, String autor, String genero, String isbn) throws Exception {
-        if (titulo == null || titulo.trim().isEmpty()) {
-            throw new Exception("O titulo do livro é obrigatório.");
+
+        if (titulo == null || titulo.trim().isEmpty() || autor == null || autor.trim().isEmpty() || genero == null || genero.trim().isEmpty() || isbn == null || isbn.trim().isEmpty()) {
+            throw new Exception("Nenhum campo pode estar em branco");
         }
-        if (autor == null || autor.trim().isEmpty()) {
-            throw new Exception("O autor do livro é obrigatório.");
-        }
-        if (genero == null || genero.trim().isEmpty()) {
-            throw new Exception("O genero do livro é obrigatório");
-        }
-        if (isbn == null || isbn.trim().isEmpty()) {
-            throw new Exception("O isbn do livro é obrigatório");
-        }
+
         Livro livro = new Livro(titulo, autor, genero, isbn);
         livroDAO.setLivro(livro);
     }
@@ -47,7 +39,7 @@ public class LivroController {
     }
 
     public void removerLivro(int id) {
-        livroDAO.removerlivro(id);
+        livroDAO.removerLivro(id);
     }
 
     public List<Livro> buscarLivroPorTitulo(String titulo) {

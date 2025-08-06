@@ -121,15 +121,15 @@ public class CadastroAlunoForm extends JInternalFrame{
     private void salvarAluno() {
         try {
             String nome = txtNome.getText().trim();
-            String idade = txtIdade.getText().trim();
+            String idade = txtIdade.getText();
             String contato = txtContato.getText().trim();
 
 
             if (alunoIdParaEdicao == null) { // Se alunoIdParaEdicao é null, é um novo cadastro
-                controller.cadastrarAluno(nome, idade, contato);
+                controller.cadastrarAluno(nome, Integer.parseInt(idade), contato);
                 JOptionPane.showMessageDialog(this, "Aluno cadastrado com sucesso!");
             } else { // Caso contrário, é uma atualização
-                controller.atualizarAluno(alunoIdParaEdicao, nome, idade, contato);
+                controller.atualizarAluno(alunoIdParaEdicao, nome, String.valueOf(idade), contato);
                 JOptionPane.showMessageDialog(this, "Aluno atualizado com sucesso!");
             }
             this.dispose(); // Fecha a janela após a operação bem-sucedida

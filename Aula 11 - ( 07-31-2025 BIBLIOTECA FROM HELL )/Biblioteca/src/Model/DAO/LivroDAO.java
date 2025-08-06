@@ -137,7 +137,7 @@ public class LivroDAO {
         }
     }
 
-    public void removerlivro(int idlivro) {
+    public void removerLivro(int idlivro) {
         String sql = "DELETE FROM livro WHERE id_livro = ?";
         Connection conexao = null;
         PreparedStatement stmt = null;
