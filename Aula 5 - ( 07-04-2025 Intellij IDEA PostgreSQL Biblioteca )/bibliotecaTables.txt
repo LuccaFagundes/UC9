@@ -14,6 +14,7 @@ CREATE TABLE livro (
 );
 
 CREATE TABLE emprestimo (
+	id_emprestimo BIGSERIAL PRIMARY KEY NOT NULL,
 	fk_id_livro BIGSERIAL NOT NULL,
 	fk_id_aluno BIGSERIAL NOT NULL,
     data_emprestimo VARCHAR(255) NOT NULL,
@@ -32,3 +33,4 @@ ALTER TABLE emprestimo ADD CONSTRAINT fk_id_aluno
 	
 
 select * from aluno;
+
