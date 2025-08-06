@@ -1,33 +1,34 @@
 CREATE TABLE aluno (
-    id_Aluno BIGSERIAL PRIMARY KEY NOT NULL,
-    nome_Aluno VARCHAR(255) NOT NULL,
-    idade_Aluno INT NOT NULL,
-    contato_Aluno VARCHAR(255) NOT NULL
+    id_aluno BIGSERIAL PRIMARY KEY NOT NULL,
+    nome_aluno VARCHAR(255) NOT NULL,
+    idade_aluno INT NOT NULL,
+    contato_aluno VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE livro (
-    id_Livro BIGSERIAL PRIMARY KEY NOT NULL,
-    titulo_Livro VARCHAR(255) NOT NULL,
-    autor_Livro VARCHAR(255) NOT NULL,
-    genero_Livro VARCHAR(255) NOT NULL,
-	isbn_Livro VARCHAR(255) NOT NULL
+    id_livro BIGSERIAL PRIMARY KEY NOT NULL,
+    titulo_livro VARCHAR(255) NOT NULL,
+    autor_livro VARCHAR(255) NOT NULL,
+    genero_livro VARCHAR(255) NOT NULL,
+	isbn_livro VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE emprestimo (
-	fk_id_Livro BIGSERIAL NOT NULL,
-	fk_id_Aluno BIGSERIAL NOT NULL,
+	fk_id_livro BIGSERIAL NOT NULL,
+	fk_id_aluno BIGSERIAL NOT NULL,
     data_emprestimo VARCHAR(255) NOT NULL,
-    data_Devolucao VARCHAR(255) NOT NULL
+    data_devolucao VARCHAR(255) NOT NULL
 );
 
-ALTER TABLE emprestimo ADD CONSTRAINT fk_id_Livro
-    FOREIGN KEY (fk_id_Livro)
-    REFERENCES livro (id_Livro)
+ALTER TABLE emprestimo ADD CONSTRAINT fk_id_livro
+    FOREIGN KEY (fk_id_livro)
+    REFERENCES livro (id_livro)
     ON DELETE CASCADE;
 	
-ALTER TABLE emprestimo ADD CONSTRAINT fk_id_Aluno
-    FOREIGN KEY (fk_id_Aluno)
-    REFERENCES aluno (id_Aluno)
+ALTER TABLE emprestimo ADD CONSTRAINT fk_id_aluno
+    FOREIGN KEY (fk_id_aluno)
+    REFERENCES aluno (id_aluno)
     ON DELETE CASCADE;
 	
+
 select * from aluno;
