@@ -22,10 +22,10 @@ public class AlunoController {
         if (nome == null || nome.trim().isEmpty()) {
             throw new Exception("O nome é obrigatório ao cadastrar um aluno.");
         }
-        if (idade < 0 || idade > 120){
+        if (idade <= 0 || idade > 150){
             throw new Exception("A idade inserida não está correta ou está nula");
         }
-        if (contato == null || contato.trim().isEmpty() || !contato.contains("519") || contato.length() > 11 ) {
+        if (contato == null || contato.trim().isEmpty() || !contato.contains("519") || !contato.length() == 11 ) {
             throw new Exception("O contato inserido não está correto ou está nulo");
         }
 
@@ -68,3 +68,4 @@ public class AlunoController {
         return alunoDAO.buscarPorNome(nome);
     }
 }
+
